@@ -3,6 +3,7 @@ import 'package:culture_app/widgets/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/event.dart';
 import '../services/event_service.dart';
@@ -35,7 +36,10 @@ class ShowtimeScreen extends ConsumerWidget {
       body: events.when(
         data: (events) => _buildEventList(context, events),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => const Center(child: EmptyListWidget()),
+        error: (error, stackTrace) => Center(
+            child: EmptyListWidget(
+          caption: AppLocalizations.of(context)!.eventsNotFound,
+        )),
       ),
     );
   }
@@ -46,7 +50,10 @@ class ShowtimeScreen extends ConsumerWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
           if (snapshot.data!.isEmpty) {
-            return const Center(child: EmptyListWidget());
+            return Center(
+                child: EmptyListWidget(
+              caption: AppLocalizations.of(context)!.eventsNotFound,
+            ));
           }
           final List<Event> events = snapshot.data!;
           return ListView.builder(
@@ -87,7 +94,10 @@ class ShowtimeScreen extends ConsumerWidget {
             },
           );
         } else if (snapshot.hasError || snapshot.data == null) {
-          return const Center(child: EmptyListWidget());
+          return Center(
+              child: EmptyListWidget(
+            caption: AppLocalizations.of(context)!.eventsNotFound,
+          ));
         } else {
           return const Center(child: CircularProgressIndicator());
         }

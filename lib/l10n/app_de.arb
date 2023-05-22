@@ -34,5 +34,7 @@
   "changePassword": "Passwort ändern",
   "@changePassword": {},
   "editPaymentMethods": "Zahlungsmethoden bearbeiten",
-  "@editPaymentMethods": {}
+  "@editPaymentMethods": {},
+  "errorLoadingEvents": "Fehler beim Laden der Veranstaltungen",
+  "@errorLoadingEvents": {}
 }

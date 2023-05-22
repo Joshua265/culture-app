@@ -3,13 +3,13 @@ import 'package:culture_app/models/event.dart';
 
 class PaymentScreen extends StatelessWidget {
   final Event event;
-  final int selectedSeatIndex;
+  final List<Price> selectedPrices;
 
   const PaymentScreen({
-    required Key key,
+    super.key,
     required this.event,
-    required this.selectedSeatIndex,
-  }) : super(key: key);
+    required this.selectedPrices,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +22,6 @@ class PaymentScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Selected seat:',
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              event.prices[selectedSeatIndex].category,
-              style: Theme.of(context).textTheme.headline6,
-            ),
             const SizedBox(height: 16),
             Text(
               'Total amount to pay:',
@@ -38,7 +29,7 @@ class PaymentScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '\$ ${event.prices[selectedSeatIndex].value}',
+              '${selectedPrices.fold(0.0, (sum, price) => sum + price.value).toStringAsFixed(2)} €',
               style: Theme.of(context).textTheme.headline5,
             ),
             const SizedBox(height: 16),

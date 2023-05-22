@@ -1,3 +1,7 @@
+import 'package:culture_app/providers/settings_provider.dart';
+import 'package:culture_app/screens/event_screen.dart';
+import 'package:culture_app/services/image_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,14 +10,16 @@ import '../services/event_service.dart';
 
 final eventsProvider =
     FutureProvider.family<List<Event>, String>((ref, category) async {
-  final events = await EventService.getEventsByCategory(category: category);
+  final settings = ref.watch(settingsProvider);
+  final events = await EventService.getEventsByCategory(
+      city: settings.city, category: category);
   return events;
 });
 
 class CategoryScreen extends ConsumerWidget {
   final String category;
 
-  CategoryScreen({required this.category});
+  const CategoryScreen({super.key, required this.category});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,14 +43,35 @@ class CategoryScreen extends ConsumerWidget {
       itemBuilder: (context, index) {
         final event = events[index];
         return Card(
+            child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  EventScreen(event: event, key: Key(event.id)),
+            ));
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: Image.network(
-                  event.imageUrl,
-                  fit: BoxFit.cover,
-                ),
+              FutureBuilder<Uint8List>(
+                future: ImageService.getImageBytes(event.imageId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  if (!snapshot.hasData) {
+                    return const Text('No Image');
+                  }
+                  return Expanded(
+                    child: Image.memory(
+                      snapshot.data!,
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
               ),
               Container(
                 padding: const EdgeInsets.all(16.0),
@@ -70,7 +97,7 @@ class CategoryScreen extends ConsumerWidget {
               ),
             ],
           ),
-        );
+        ));
       },
     );
   }

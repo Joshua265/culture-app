@@ -1,3 +1,6 @@
+import 'package:culture_app/screens/reservation_screen.dart';
+import 'package:culture_app/services/image_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:culture_app/models/event.dart';
 
@@ -44,10 +47,25 @@ class _EventScreenState extends State<EventScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      widget.event.imageUrl,
-                      height: 200,
-                      fit: BoxFit.cover,
+                    FutureBuilder<Uint8List>(
+                      future: ImageService.getImageBytes(widget.event.imageId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        if (!snapshot.hasData) {
+                          return const Text('No Image');
+                        }
+                        return Image.memory(
+                          snapshot.data!,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -60,105 +78,23 @@ class _EventScreenState extends State<EventScreen> {
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'Select a seat:',
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: widget.event.prices
-                          .asMap()
-                          .entries
-                          .map(
-                            (entry) => GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedSeatIndex = entry.key;
-                                });
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(16.0),
-                                decoration: BoxDecoration(
-                                  color: _selectedSeatIndex == entry.key
-                                      ? Colors.blue
-                                      : Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      entry.value.category,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle1!
-                                          .copyWith(
-                                            color:
-                                                _selectedSeatIndex == entry.key
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                          ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      '\$ ${entry.value.value}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subtitle1!
-                                          .copyWith(
-                                            color:
-                                                _selectedSeatIndex == entry.key
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    const SizedBox(height: 16),
-                    _selectedSeatIndex == -1
-                        ? Container()
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Selected seat:',
-                                style: Theme.of(context).textTheme.subtitle1,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                widget
-                                    .event.prices[_selectedSeatIndex].category,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ],
-                          ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _selectedSeatIndex == -1
-                  ? null
-                  : () {
-                      // Navigate to PaymentScreen with selected seat
-                      Navigator.pushNamed(context, '/payment', arguments: {
-                        'event': widget.event,
-                        'selectedSeatIndex': _selectedSeatIndex,
-                      });
-                    },
-              child: const Text('Reserve Now'),
-            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        ReservationScreen(event: widget.event),
+                  ));
+                },
+                child: Text('Reserve Now'),
+              ),
+            )
           ],
         ),
       ),

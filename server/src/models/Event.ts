@@ -12,25 +12,28 @@ export interface ISeat {
 
 export enum EventMediaCategory {
   CONCERT = 'concert',
+  CINEMA = 'cinema',
   THEATER = 'theater',
-  SPORTS = 'sports'
+  FESTIVALS = 'festival'
 }
 
 export interface IEvent extends Document {
   title: string;
   location: string;
+  city: string;
   startTime: Date;
   endTime: Date;
   prices: IPrice[];
   mediaCategory: EventMediaCategory;
-  contentId: string;
-  imageUrl: string;
+  imageId: string;
   description: string;
   bookedSeats: ISeat[];
+  genres: string[];
 }
 
 const EventSchema = new mongoose.Schema({
   title: String,
+  city: String,
   location: String,
   startTime: Date,
   endTime: Date,
@@ -39,10 +42,10 @@ const EventSchema = new mongoose.Schema({
     type: String,
     enum: Object.values(EventMediaCategory)
   },
-  contentId: String,
-  imageUrl: String,
+  genres: [String],
+  imageId: String,
   description: String,
-  bookedSeats: [{ id: String, category: String }]
+  bookedSeats: [{ row: String, seatNumber: String }]
 });
 
 export const Event = mongoose.model<IEvent>('Event', EventSchema);

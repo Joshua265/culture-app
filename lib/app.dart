@@ -11,6 +11,28 @@ import 'package:culture_app/providers/settings_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+ThemeData lightTheme = ThemeData.light().copyWith(
+  colorScheme: const ColorScheme.light().copyWith(
+    primary:
+        const Color.fromARGB(255, 25, 118, 255), // Customize the primary color
+    secondary: const Color.fromARGB(
+        255, 124, 77, 255), // Customize the secondary color
+
+    // Customize other colors as needed
+  ),
+);
+
+ThemeData darkTheme = ThemeData.dark().copyWith(
+  colorScheme: const ColorScheme.dark().copyWith(
+      primary: const Color.fromARGB(
+          255, 25, 118, 255), // Customize the primary color
+      secondary: const Color.fromARGB(
+          255, 124, 77, 255), // Customize the secondary color
+      surface: const Color.fromARGB(255, 25, 118, 255)
+      // Customize other colors as needed
+      ),
+);
+
 void main() async {
   await dotenv.load();
   runApp(MyApp());
@@ -18,6 +40,10 @@ void main() async {
 
 class IndexNotifier extends StateNotifier<int> {
   IndexNotifier(super.state);
+
+  set setIndex(int index) {
+    state = index;
+  }
 }
 
 final indexProvider = StateNotifierProvider<IndexNotifier, int>((ref) {
@@ -28,7 +54,7 @@ class MyApp extends ConsumerWidget {
   final List<Widget> _screens = [
     const StartScreen(),
     const MediaCategoriesScreen(),
-    const EventCalendarScreen(),
+    EventCalendarScreen(),
     const UserScreen(),
   ];
 
@@ -40,18 +66,17 @@ class MyApp extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     return MaterialApp(
       title: 'CultureAPP',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      darkTheme: ThemeData.dark(),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      locale: Locale(settings.language),
       home: Scaffold(
         body: _screens[currentIndex],
         bottomNavigationBar: CustomBottomNavigationBar(
           currentIndex: currentIndex,
-          onTap: (index) => ref.read(indexProvider.notifier).state = index,
+          onTap: (index) => ref.watch(indexProvider.notifier).setIndex = index,
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

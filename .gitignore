@@ -29,3 +29,10 @@ doc/api/
 # typescript
 server/node_modules
 server/*.lock
+
+# images
+images/*.jpg
+images/*.jpeg
+images/*.png
+images/*.gif
+server/uploads/*

@@ -5,7 +5,7 @@ class EmptyListWidget extends StatelessWidget {
 
   const EmptyListWidget({
     Key? key,
-    this.caption = "Couldn't find any events",
+    required this.caption, // Add the 'required' keyword here
   }) : super(key: key);
 
   @override

@@ -12,10 +12,10 @@ class MediaCategoriesScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          _buildCategoryItem(context, 'Theaters', Icons.theaters),
-          _buildCategoryItem(context, 'Cinemas', Icons.movie),
-          _buildCategoryItem(context, 'Concerts', Icons.music_note),
-          _buildCategoryItem(context, 'Festivals', Icons.festival),
+          _buildCategoryItem(context, 'theater', Icons.theaters),
+          _buildCategoryItem(context, 'cinema', Icons.movie),
+          _buildCategoryItem(context, 'concert', Icons.music_note),
+          _buildCategoryItem(context, 'festival', Icons.festival),
         ],
       ),
     );

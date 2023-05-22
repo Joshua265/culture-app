@@ -1,3 +1,4 @@
+import 'package:culture_app/providers/settings_provider.dart';
 import 'package:culture_app/screens/event_screen.dart';
 import 'package:culture_app/widgets/empty_list.dart';
 import 'package:culture_app/widgets/event_card.dart';
@@ -9,7 +10,8 @@ import '../models/event.dart';
 import '../services/event_service.dart';
 
 final eventsProvider = FutureProvider<List<Event>>((ref) async {
-  final events = await EventService.getEvents();
+  final settings = ref.read(settingsProvider);
+  final events = await EventService.getEvents(settings.city);
   return events;
 });
 
@@ -33,23 +35,29 @@ class StartScreen extends ConsumerWidget {
         ],
       ),
       body: events.when(
-        data: (events) => _buildEventList(events),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => const Center(child: EmptyListWidget()),
-      ),
+          data: (events) => _buildEventList(events, context),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stackTrace) {
+            return Center(
+                child: EmptyListWidget(
+              caption: AppLocalizations.of(context)!.errorLoadingEvents,
+            ));
+          }),
     );
   }
 
-  Widget _buildEventList(List<Event> events) {
+  Widget _buildEventList(List<Event> events, context) {
     if (events.isEmpty) {
-      return const Center(child: EmptyListWidget());
+      return Center(
+          child: EmptyListWidget(
+        caption: AppLocalizations.of(context)!.eventsNotFound,
+      ));
     }
     return ListView.builder(
       itemCount: events.length,
       itemBuilder: (context, index) {
         final event = events[index];
         return EventCard(
-          key: Key(event.id),
           event: event,
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(

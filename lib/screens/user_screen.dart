@@ -2,6 +2,7 @@ import 'package:culture_app/providers/settings_provider.dart';
 import 'package:culture_app/widgets/language_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserScreen extends ConsumerWidget {
   const UserScreen({super.key});
@@ -11,7 +12,7 @@ class UserScreen extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User'),
+        title: Text(AppLocalizations.of(context)!.user),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -19,7 +20,7 @@ class UserScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Personal Settings',
+              AppLocalizations.of(context)!.personalSettings,
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
@@ -29,14 +30,14 @@ class UserScreen extends ConsumerWidget {
               children: [
                 ListTile(
                   leading: const Icon(Icons.confirmation_num),
-                  title: const Text('My Tickets'),
+                  title: Text(AppLocalizations.of(context)!.myTickets),
                   onTap: () {
                     // TODO: navigate to tickets screen
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.location_on),
-                  title: const Text('City'),
+                  title: Text(AppLocalizations.of(context)!.city),
                   subtitle: Text(settings.city),
                   onTap: () {
                     // TODO: navigate to location settings screen
@@ -48,7 +49,7 @@ class UserScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Display Settings',
+              AppLocalizations.of(context)!.displaySettings,
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
@@ -57,7 +58,7 @@ class UserScreen extends ConsumerWidget {
             child: Column(
               children: [
                 SwitchListTile(
-                  title: const Text('Dark Mode'),
+                  title: Text(AppLocalizations.of(context)!.darkMode),
                   value: settings.darkMode,
                   onChanged: (bool value) {
                     ref.read(settingsProvider.notifier).toggleDarkMode();
@@ -70,7 +71,7 @@ class UserScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Account Settings',
+              AppLocalizations.of(context)!.accountSettings,
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
@@ -80,14 +81,14 @@ class UserScreen extends ConsumerWidget {
               children: [
                 ListTile(
                   leading: const Icon(Icons.lock),
-                  title: const Text('Change Password'),
+                  title: Text(AppLocalizations.of(context)!.changePassword),
                   onTap: () {
                     // TODO: navigate to password change screen
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.credit_card),
-                  title: const Text('Edit Payment Methods'),
+                  title: Text(AppLocalizations.of(context)!.editPaymentMethods),
                   onTap: () {
                     // TODO: navigate to payment methods screen
                   },

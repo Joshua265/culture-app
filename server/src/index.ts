@@ -2,9 +2,11 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import morgan from 'morgan';
+import path from 'path';
 
 import eventsRouter from './routes/events';
-import contentRouter from './routes/content';
+import imageRouter from './routes/images';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -15,12 +17,15 @@ const app = express();
 // Use CORS middleware
 app.use(cors());
 
+// Set up Morgan middleware
+app.use(morgan('combined'));
+
 // Parse JSON body
 app.use(express.json());
 
 // Set up routes
 app.use('/events', eventsRouter);
-app.use('/content', contentRouter);
+app.use('/images', imageRouter);
 
 // Connect to MongoDB database
 mongoose
@@ -38,3 +43,5 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
+app.get('/', express.static(path.join(__dirname, './public')));
