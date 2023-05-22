@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -22,26 +23,26 @@ class CustomBottomNavigationBar extends StatelessWidget {
           children: [
             BottomNavItem(
               icon: Icons.home,
-              label: 'Home',
+              label: AppLocalizations.of(context)!.home,
               isActive: currentIndex == 0,
               onTap: () => onTap(0),
             ),
             BottomNavItem(
               icon: Icons.video_library,
-              label: 'Media',
+              label: AppLocalizations.of(context)!.media,
               isActive: currentIndex == 1,
               onTap: () => onTap(1),
             ),
             const SizedBox(width: 16),
             BottomNavItem(
               icon: Icons.calendar_today,
-              label: 'Calendar',
+              label: AppLocalizations.of(context)!.calendar,
               isActive: currentIndex == 2,
               onTap: () => onTap(2),
             ),
             BottomNavItem(
               icon: Icons.person,
-              label: 'Profile',
+              label: AppLocalizations.of(context)!.user,
               isActive: currentIndex == 3,
               onTap: () => onTap(3),
             ),
@@ -76,7 +77,7 @@ class BottomNavItem extends StatelessWidget {
             icon,
             color: isActive ? Theme.of(context).primaryColor : Colors.grey,
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
