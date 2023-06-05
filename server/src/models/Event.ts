@@ -12,7 +12,7 @@ export interface ISeat {
 
 export enum EventMediaCategory {
   CONCERT = 'concert',
-  CINEMA = 'cinema',
+  CINEMA = 'movie',
   THEATER = 'theater',
   FESTIVALS = 'festival'
 }

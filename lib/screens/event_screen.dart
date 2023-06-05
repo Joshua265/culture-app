@@ -3,6 +3,7 @@ import 'package:culture_app/services/image_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:culture_app/models/event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventScreen extends StatefulWidget {
   final Event event;
@@ -92,7 +93,9 @@ class _EventScreenState extends State<EventScreen> {
                         ReservationScreen(event: widget.event),
                   ));
                 },
-                child: Text('Reserve Now'),
+                child: Text(
+                  AppLocalizations.of(context)!.reserveTicket,
+                ),
               ),
             )
           ],

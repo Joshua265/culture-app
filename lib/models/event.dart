@@ -27,22 +27,54 @@ class Event {
     this.bookedSeats = const [],
   });
 
+  @override
+  bool operator ==(other) {
+    return (other is Event) && (other.title == title);
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ title.hashCode;
+
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['_id'],
-      title: json['title'],
-      location: json['location'],
-      city: json['city'],
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
-      prices: List<Price>.from(json['prices'].map((p) => Price.fromJson(p))),
-      mediaCategory: json['mediaCategory'],
-      imageId: json['imageId'],
-      description: json['description'],
-      genres: List<String>.from(json['genres']),
-      bookedSeats:
-          List<Seat>.from(json['bookedSeats'].map((s) => Seat.fromJson(s))),
+      id: json['_id'] ?? '',
+      title: json['title'] ?? '',
+      location: json['location'] ?? '',
+      city: json['city'] ?? '',
+      startTime: json['startTime'] != null
+          ? DateTime.parse(json['startTime'])
+          : DateTime.now(),
+      endTime: json['endTime'] != null
+          ? DateTime.parse(json['endTime'])
+          : DateTime.now(),
+      prices: json['prices'] != null
+          ? List<Price>.from(json['prices'].map((p) => Price.fromJson(p)))
+          : [],
+      mediaCategory: json['mediaCategory'] ?? '',
+      imageId: json['imageId'] ?? '',
+      description: json['description'] ?? '',
+      genres: json['genres'] != null ? List<String>.from(json['genres']) : [],
+      bookedSeats: json['bookedSeats'] != null
+          ? List<Seat>.from(json['bookedSeats'].map((s) => Seat.fromJson(s)))
+          : [],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'location': location,
+      'city': city,
+      'startTime': startTime.toIso8601String(),
+      'endTime': endTime.toIso8601String(),
+      'prices': prices.map((price) => price.toMap()).toList(),
+      'mediaCategory': mediaCategory,
+      'imageId': imageId,
+      'description': description,
+      'genres': genres,
+      'bookedSeats': bookedSeats.map((seat) => seat.toMap()).toList(),
+    };
   }
 }
 
@@ -60,6 +92,13 @@ class Price {
       category: json['category'],
       value: double.parse(json['value'].toString()),
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'category': category,
+      'value': value,
+    };
   }
 }
 
@@ -91,11 +130,32 @@ class Seat {
 
   @override
   int get hashCode => row.hashCode ^ seatNumber.hashCode;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'row': row,
+      'seatNumber': seatNumber,
+    };
+  }
 }
 
 const List<String> eventMediaCategory = [
   "theater",
-  "cinema",
+  "movie",
   "concert",
   "festival",
+];
+
+const List<String> genres = [
+  "comedy",
+  "drama",
+  "horror",
+  "romance",
+  "action",
+  "thriller",
+  "mystery",
+  "crime",
+  "animation",
+  "adventure",
+  "fantasy"
 ];

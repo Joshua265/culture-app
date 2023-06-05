@@ -1,107 +1,109 @@
 import 'package:culture_app/screens/event_screen.dart';
-import 'package:culture_app/widgets/empty_list.dart';
+import 'package:culture_app/services/event_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:collection/collection.dart';
+import 'package:culture_app/models/event.dart';
 
-import '../models/event.dart';
-import '../services/event_service.dart';
-import 'start_screen.dart';
+class Tuple<T1, T2> {
+  final T1 item1;
+  final T2 item2;
 
-class ShowtimeScreen extends ConsumerWidget {
-  final String category;
-  final String contentId;
-
-  ShowtimeScreen({required this.category, required this.contentId});
+  Tuple(this.item1, this.item2);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(eventsProvider);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Tuple &&
+          runtimeType == other.runtimeType &&
+          item1 == other.item1 &&
+          item2 == other.item2;
 
+  @override
+  int get hashCode => item1.hashCode ^ item2.hashCode;
+
+  @override
+  String toString() => 'Tuple<$T1, $T2>{item1: $item1, item2: $item2}';
+}
+
+class ShowtimeScreen extends StatelessWidget {
+  final String title;
+  final String city;
+
+  const ShowtimeScreen({Key? key, required this.title, required this.city})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(category),
-        bottom: TabBar(
-          isScrollable: true,
-          tabs: [
-            for (var i = 0; i < 7; i++)
-              Tab(
-                text: DateFormat('EEE')
-                    .format(DateTime.now().add(Duration(days: i))),
-              ),
-          ],
-        ),
+        title: Text(title),
       ),
-      body: events.when(
-        data: (events) => _buildEventList(context, events),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(
-            child: EmptyListWidget(
-          caption: AppLocalizations.of(context)!.eventsNotFound,
-        )),
-      ),
-    );
-  }
-
-  Widget _buildEventList(BuildContext context, List<Event> events) {
-    return FutureBuilder<List<Event>>(
-      future: EventService.getEventsByContentId(contentId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data != null) {
-          if (snapshot.data!.isEmpty) {
+      body: FutureBuilder<List<Event>>(
+        future: EventService.getEventsByTitle(title, city, DateTime.now()),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
-                child: EmptyListWidget(
-              caption: AppLocalizations.of(context)!.eventsNotFound,
-            ));
-          }
-          final List<Event> events = snapshot.data!;
-          return ListView.builder(
-            itemCount: events.length,
-            itemBuilder: (context, index) {
-              final event = events[index];
-              return ExpansionTile(
-                title: Text(event.title),
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                child: Text(AppLocalizations.of(context)!.eventsNotFound));
+          } else {
+            final events = snapshot.data!;
+            final groupedEvents = groupBy<Event, Tuple<DateTime, String>>(
+                events,
+                (event) => Tuple(
+                    DateTime(event.startTime.year, event.startTime.month,
+                        event.startTime.day),
+                    event.location));
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                itemCount: groupedEvents.length,
+                itemBuilder: (context, index) {
+                  var dateLocation = groupedEvents.keys.toList()[index];
+                  var date = dateLocation.item1;
+                  var location = dateLocation.item2;
+                  var events = groupedEvents[dateLocation]!;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            for (var event in events)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    EventScreen(
-                                      event: event,
-                                      key: Key(event.id),
-                                    );
-                                  },
-                                  child: Text(DateFormat('HH:mm')
-                                      .format(event.startTime)),
+                      Text(
+                        DateFormat.yMMMd().format(date),
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      Text(location,
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      Wrap(
+                        direction: Axis.horizontal,
+                        spacing: 8,
+                        children: [
+                          for (var event in events)
+                            OutlinedButton(
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EventScreen(
+                                    event: event,
+                                    key: Key(event.id),
+                                  ),
                                 ),
                               ),
-                          ],
-                        ),
+                              child:
+                                  Text(DateFormat.jm().format(event.startTime)),
+                            ),
+                        ],
                       ),
+                      const Divider(height: 8)
                     ],
-                  ),
-                ],
-              );
-            },
-          );
-        } else if (snapshot.hasError || snapshot.data == null) {
-          return Center(
-              child: EmptyListWidget(
-            caption: AppLocalizations.of(context)!.eventsNotFound,
-          ));
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
+                  );
+                },
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

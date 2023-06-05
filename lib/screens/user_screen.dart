@@ -1,4 +1,5 @@
 import 'package:culture_app/providers/settings_provider.dart';
+import 'package:culture_app/screens/ticket_screen.dart';
 import 'package:culture_app/widgets/language_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +33,11 @@ class UserScreen extends ConsumerWidget {
                   leading: const Icon(Icons.confirmation_num),
                   title: Text(AppLocalizations.of(context)!.myTickets),
                   onTap: () {
-                    // TODO: navigate to tickets screen
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => TicketsScreen(),
+                      ),
+                    );
                   },
                 ),
                 ListTile(
@@ -50,7 +55,7 @@ class UserScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               AppLocalizations.of(context)!.displaySettings,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           Card(
@@ -72,7 +77,7 @@ class UserScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               AppLocalizations.of(context)!.accountSettings,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           Card(

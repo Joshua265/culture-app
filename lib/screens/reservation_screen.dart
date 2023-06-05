@@ -1,6 +1,7 @@
 import 'package:culture_app/models/event.dart';
 import 'package:culture_app/screens/payment_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ReservationScreen extends StatefulWidget {
   final Event event;
@@ -33,8 +34,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
         child: Column(
           children: [
             Text(
-              'Select a seat:',
-              style: Theme.of(context).textTheme.subtitle1,
+              AppLocalizations.of(context)!.selectSeats,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             SizedBox(
               height: 16.0 * widget.nRows + 16.0 * (widget.nRows - 1),
@@ -144,8 +145,10 @@ class _ReservationScreenState extends State<ReservationScreen> {
             const SizedBox(
               height: 32.0,
             ),
-            Text('Selected Seats: ${selectedSeats.length}'),
-            Text('Total Price: ${calculateTotalPrice(widget.event.prices)}€'),
+            Text(
+                '${AppLocalizations.of(context)!.selectedSeats}: ${selectedSeats.length}'),
+            Text(
+                '${AppLocalizations.of(context)!.totalPrice}: ${calculateTotalPrice(widget.event.prices)}€'),
             const SizedBox(
               height: 32.0,
             ),
@@ -160,12 +163,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
                             builder: (context) => PaymentScreen(
                               event: widget.event,
                               selectedPrices: selectedPrices,
+                              selectedSeats: selectedSeats,
                             ),
                           ),
                         );
                       }
                     : null,
-                child: const Text('Buy Tickets'),
+                child: Text(AppLocalizations.of(context)!.buyTickets),
               ),
             ),
           ],

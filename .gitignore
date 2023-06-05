@@ -36,3 +36,4 @@ images/*.jpeg
 images/*.png
 images/*.gif
 server/uploads/*
+data/*

@@ -2,6 +2,7 @@ import 'package:culture_app/providers/settings_provider.dart';
 import 'package:culture_app/screens/event_screen.dart';
 import 'package:culture_app/widgets/empty_list.dart';
 import 'package:culture_app/widgets/event_card.dart';
+import 'package:culture_app/widgets/event_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,7 +12,7 @@ import '../services/event_service.dart';
 
 final eventsProvider = FutureProvider<List<Event>>((ref) async {
   final settings = ref.read(settingsProvider);
-  final events = await EventService.getEvents(settings.city);
+  final events = await EventService.getRandomEvents(settings.city);
   return events;
 });
 
@@ -21,7 +22,7 @@ class StartScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final events = ref.watch(eventsProvider);
-
+    final settings = ref.watch(settingsProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('CultureAPP'),
@@ -29,7 +30,8 @@ class StartScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // TODO: Implement search
+              showSearch(
+                  context: context, delegate: EventSearch(settings.city));
             },
           ),
         ],
@@ -53,20 +55,32 @@ class StartScreen extends ConsumerWidget {
         caption: AppLocalizations.of(context)!.eventsNotFound,
       ));
     }
-    return ListView.builder(
-      itemCount: events.length,
-      itemBuilder: (context, index) {
-        final event = events[index];
-        return EventCard(
-          event: event,
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  EventScreen(event: event, key: Key(event.id)),
-            ));
+    return Column(children: [
+      const SizedBox(height: 12),
+      Text(
+        AppLocalizations.of(context)!.recommendedEvents,
+        style: Theme.of(context).textTheme.titleLarge,
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(height: 12),
+      Expanded(
+        // Add this
+        child: ListView.builder(
+          itemCount: events.length,
+          itemBuilder: (context, index) {
+            final event = events[index];
+            return EventCard(
+              event: event,
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      EventScreen(event: event, key: Key(event.id)),
+                ));
+              },
+            );
           },
-        );
-      },
-    );
+        ),
+      )
+    ]);
   }
 }

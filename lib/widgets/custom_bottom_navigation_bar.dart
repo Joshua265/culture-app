@@ -75,13 +75,16 @@ class BottomNavItem extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: isActive ? Theme.of(context).primaryColor : Colors.grey,
+            color:
+                isActive ? Theme.of(context).colorScheme.primary : Colors.grey,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: isActive ? Theme.of(context).primaryColor : Colors.grey,
+              color: isActive
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),

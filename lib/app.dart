@@ -1,4 +1,5 @@
 import 'package:culture_app/widgets/custom_bottom_navigation_bar.dart';
+import 'package:culture_app/widgets/fetch_event_and_navigate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -13,25 +14,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 ThemeData lightTheme = ThemeData.light().copyWith(
   colorScheme: const ColorScheme.light().copyWith(
-    primary:
-        const Color.fromARGB(255, 25, 118, 255), // Customize the primary color
-    secondary: const Color.fromARGB(
-        255, 124, 77, 255), // Customize the secondary color
-
-    // Customize other colors as needed
+    primary: const Color(0xFF004675),
+    secondary: const Color(0xFF004675),
   ),
 );
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
-  colorScheme: const ColorScheme.dark().copyWith(
-      primary: const Color.fromARGB(
-          255, 25, 118, 255), // Customize the primary color
-      secondary: const Color.fromARGB(
-          255, 124, 77, 255), // Customize the secondary color
-      surface: const Color.fromARGB(255, 25, 118, 255)
-      // Customize other colors as needed
-      ),
-);
+    colorScheme: const ColorScheme.dark().copyWith(
+  primary: const Color(0xFF0094f8),
+  secondary: const Color(0xFF0094f8),
+  surface: const Color(0xFF0094f8),
+));
 
 void main() async {
   await dotenv.load();
@@ -57,6 +50,7 @@ class MyApp extends ConsumerWidget {
     EventCalendarScreen(),
     const UserScreen(),
   ];
+  late Future<String> futureBarcode;
 
   MyApp({super.key});
 
@@ -81,6 +75,23 @@ class MyApp extends ConsumerWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             scanBarCode();
+            FutureBuilder(
+                future: futureBarcode,
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.hasData) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            FetchEventAndNavigate(eventId: snapshot.data!),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const CircularProgressIndicator();
+                });
           },
           child: const Icon(Icons.qr_code),
         ),

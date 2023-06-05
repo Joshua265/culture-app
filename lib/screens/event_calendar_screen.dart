@@ -64,7 +64,14 @@ List<List<Event>> groupEventsByHour(List<Event> events) {
     eventGroups[hour]!.add(event);
   }
 
-  return eventGroups.values.toList();
+  var sortedKeys = eventGroups.keys.toList(growable: false)
+    ..sort((k1, k2) => k1.compareTo(k2));
+
+  Map<int, List<Event>> sortedEventGroups = {
+    for (var k in sortedKeys) k: eventGroups[k]!
+  };
+
+  return sortedEventGroups.values.toList();
 }
 
 class EventCalendarScreen extends ConsumerWidget {
@@ -98,7 +105,7 @@ class EventCalendarScreen extends ConsumerWidget {
     });
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calendar'),
+        title: Text(AppLocalizations.of(context)!.calendar),
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_today),
@@ -136,7 +143,7 @@ class EventCalendarScreen extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                         color: calendarState.selectedTabIndex == index
                             ? Colors.white
-                            : Theme.of(context).textTheme.bodyText1!.color,
+                            : Theme.of(context).textTheme.bodyLarge!.color,
                       ),
                     ),
                   );
@@ -166,9 +173,9 @@ class EventCalendarScreen extends ConsumerWidget {
                 final day = calendarState.days[index];
                 return Consumer(
                   builder: (context, ref, _) {
-                    final events = ref.watch(calendarStateProvider.select(
-                      (value) => value.selectedEvents,
-                    ));
+                    // final events = ref.watch(calendarStateProvider.select(
+                    //   (value) => value.selectedEvents,
+                    // ));
                     return FutureBuilder<List<Event>>(
                       future: EventService.getEventsByTimeFrame(
                         settings.city,
@@ -212,10 +219,19 @@ class EventCalendarScreen extends ConsumerWidget {
                           );
                         }
                         final eventsByHour = groupEventsByHour(events);
+
                         return ListView.builder(
                           itemCount: eventsByHour.length,
                           itemBuilder: (context, index) {
                             final eventsOfHour = eventsByHour[index];
+                            DateTime titleHour = DateTime(
+                              eventsOfHour[0].startTime.year,
+                              eventsOfHour[0].startTime.month,
+                              eventsOfHour[0].startTime.day,
+                              eventsOfHour[0].startTime.hour,
+                              0,
+                              0,
+                            );
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 8.0,
@@ -225,7 +241,8 @@ class EventCalendarScreen extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${eventsOfHour[0].startTime.hour}:00 ${eventsOfHour[0].startTime.hour < 12 ? 'AM' : 'PM'}',
+                                    DateFormat.jm(settings.language)
+                                        .format(titleHour),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium,

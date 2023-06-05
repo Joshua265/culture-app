@@ -1,3 +1,4 @@
+import 'package:culture_app/widgets/fetch_event_and_navigate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,5 @@ Future<String> scanBarCode() async {
     true,
     ScanMode.BARCODE,
   );
-  // TODO: add logic to fetch event from API and navigate to EventScreen
   return barcodeScanRes;
 }
