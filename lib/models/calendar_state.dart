@@ -1,5 +1,4 @@
 import 'package:culture_app/models/event.dart';
-import 'package:culture_app/services/event_service.dart';
 import 'package:flutter/material.dart';
 
 List<DateTime> createDayTabs(DateTime day, int numDays) {

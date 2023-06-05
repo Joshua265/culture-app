@@ -5,7 +5,7 @@ import datetime
 import json
 from glob import glob
 
-BASE_URL = "http://localhost:5000"
+BASE_URL = "https://cultureapi.hermann-remote.de"
 
 
 DAYS_OF_WEEK = [

@@ -55,32 +55,35 @@ class StartScreen extends ConsumerWidget {
         caption: AppLocalizations.of(context)!.eventsNotFound,
       ));
     }
-    return Column(children: [
-      const SizedBox(height: 12),
-      Text(
-        AppLocalizations.of(context)!.recommendedEvents,
-        style: Theme.of(context).textTheme.titleLarge,
-        textAlign: TextAlign.center,
-      ),
-      const SizedBox(height: 12),
-      Expanded(
-        // Add this
-        child: ListView.builder(
-          itemCount: events.length,
-          itemBuilder: (context, index) {
-            final event = events[index];
-            return EventCard(
-              event: event,
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      EventScreen(event: event, key: Key(event.id)),
-                ));
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          const SizedBox(height: 12),
+          Text(
+            AppLocalizations.of(context)!.recommendedEvents,
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.left,
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            // Add this
+            child: ListView.builder(
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                final event = events[index];
+                return EventCard(
+                  event: event,
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          EventScreen(event: event, key: Key(event.id)),
+                    ));
+                  },
+                );
               },
-            );
-          },
-        ),
-      )
-    ]);
+            ),
+          )
+        ]));
   }
 }

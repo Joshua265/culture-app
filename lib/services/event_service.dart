@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -44,6 +43,7 @@ class EventService {
       final events = jsonList.map((json) => Event.fromJson(json)).toList();
       return events;
     } else {
+      print(response);
       throw Exception('Failed to load events');
     }
   }

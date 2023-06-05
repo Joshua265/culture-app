@@ -6,6 +6,7 @@ import 'package:culture_app/services/event_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/event.dart';
 
@@ -53,10 +54,25 @@ class CategoryScreen extends ConsumerWidget {
     final selectedGenres = ref.watch(selectedGenresProvider.notifier);
     final eventsFuture = selectedGenres.getFilteredEvents(category, city);
     AppBar appBar;
+    String titleLabel = '';
+    switch (category) {
+      case 'theater':
+        titleLabel = AppLocalizations.of(context)!.theater;
+        break;
+      case 'movie':
+        titleLabel = AppLocalizations.of(context)!.movie;
+        break;
+      case 'concert':
+        titleLabel = AppLocalizations.of(context)!.concert;
+        break;
+      case 'festival':
+        titleLabel = AppLocalizations.of(context)!.festival;
+        break;
+    }
 
     if (category == 'movie' || category == 'theater') {
       appBar = AppBar(
-        title: Text(category),
+        title: Text(titleLabel),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: _buildGenreChips(context, ref),

@@ -15,8 +15,6 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
-  int _selectedSeatIndex = -1;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
