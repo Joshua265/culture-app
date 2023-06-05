@@ -25,6 +25,7 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "build": "tsc"
   }
 }
