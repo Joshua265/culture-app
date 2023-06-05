@@ -29,6 +29,7 @@ doc/api/
 # typescript
 server/node_modules
 server/*.lock
+server/dist/*
 
 # images
 images/*.jpg

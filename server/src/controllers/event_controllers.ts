@@ -8,7 +8,7 @@ router.get('/', async (req: Request, res: Response) => {
   try {
     const events = await Event.find();
     res.json(events);
-  } catch (err) {
+  } catch (err: any) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
@@ -24,7 +24,7 @@ router.get('/category/:mediaCategory', async (req: Request, res: Response) => {
       .skip(parseInt(skip as string))
       .limit(parseInt(limit as string));
     res.json(events);
-  } catch (err) {
+  } catch (err: any) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
@@ -37,7 +37,7 @@ router.get('/content/:contentId', async (req: Request, res: Response) => {
   try {
     const events = await Event.find({ contentId });
     res.json(events);
-  } catch (err) {
+  } catch (err: any) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
@@ -55,7 +55,7 @@ router.get('/day/:day', async (req: Request, res: Response) => {
       }
     });
     res.json(events);
-  } catch (err) {
+  } catch (err: any) {
     console.error(err.message);
     res.status(500).send('Server error');
   }

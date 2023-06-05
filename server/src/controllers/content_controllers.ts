@@ -8,7 +8,7 @@ router.get('/', async (req: Request, res: Response) => {
   try {
     const contents = await Content.find();
     res.json(contents);
-  } catch (err) {
+  } catch (err: any) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
