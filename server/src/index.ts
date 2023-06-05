@@ -29,7 +29,10 @@ app.use('/images', imageRouter);
 
 // Connect to MongoDB database
 mongoose
-  .connect(process.env.MONGODB_URI!, {})
+  .connect(process.env.MONGODB_URI!, {
+    user: process.env.MONGO_USER,
+    pass: process.env.MONGO_PASSWORD
+  })
   .then(() => {
     console.log('Connected to database');
   })
