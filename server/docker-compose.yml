@@ -1,0 +1,17 @@
+version: "3.3"
+
+services:
+  cultureapi:
+    build: .
+    container_name: "cultureapi"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cultureapi.rule=Host(`cultureapi.hermann-remote.de`)"
+      - "traefik.http.routers.cultureapi.entrypoints=websecure"
+      - "traefik.http.routers.cultureapi.tls.certresolver=myresolver"
+    networks:
+      - gateway
+
+networks:
+  gateway:
+    external: true
