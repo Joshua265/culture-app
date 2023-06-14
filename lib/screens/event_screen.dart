@@ -1,11 +1,14 @@
+import 'package:culture_app/providers/settings_provider.dart';
 import 'package:culture_app/screens/reservation_screen.dart';
 import 'package:culture_app/services/image_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:culture_app/models/event.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-class EventScreen extends StatefulWidget {
+class EventScreen extends ConsumerStatefulWidget {
   final Event event;
 
   const EventScreen({required Key key, required this.event}) : super(key: key);
@@ -14,9 +17,10 @@ class EventScreen extends StatefulWidget {
   _EventScreenState createState() => _EventScreenState();
 }
 
-class _EventScreenState extends State<EventScreen> {
+class _EventScreenState extends ConsumerState<EventScreen> {
   @override
   Widget build(BuildContext context) {
+    final settings = ref.watch(settingsProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.event.title),
@@ -28,17 +32,18 @@ class _EventScreenState extends State<EventScreen> {
           children: [
             Text(
               widget.event.location,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              '${widget.event.startTime.day}.${widget.event.startTime.month}.${widget.event.startTime.year}',
-              style: Theme.of(context).textTheme.headline6,
+              DateFormat.yMMMMd(settings.language)
+                  .format(widget.event.startTime),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             Text(
-              '${widget.event.startTime.hour}:${widget.event.startTime.minute} - ${widget.event.endTime.hour}:${widget.event.endTime.minute}',
-              style: Theme.of(context).textTheme.subtitle1,
+              '${DateFormat.jm(settings.language).format(widget.event.startTime)} - ${DateFormat.jm(settings.language).format(widget.event.endTime)}',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -69,12 +74,12 @@ class _EventScreenState extends State<EventScreen> {
                     const SizedBox(height: 16),
                     Text(
                       widget.event.title,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       widget.event.description,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     const SizedBox(height: 16),
                   ],

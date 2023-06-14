@@ -41,9 +41,9 @@ class EventService {
     if (response.statusCode == 200) {
       final jsonList = json.decode(response.body) as List<dynamic>;
       final events = jsonList.map((json) => Event.fromJson(json)).toList();
+      print(events);
       return events;
     } else {
-      print(response);
       throw Exception('Failed to load events');
     }
   }

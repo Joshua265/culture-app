@@ -1,19 +1,20 @@
+import 'package:culture_app/providers/settings_provider.dart';
 import 'package:culture_app/services/image_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../models/event.dart';
 
-class EventCard extends StatelessWidget {
+class EventCard extends ConsumerWidget {
   final Event event;
   final Function() onTap;
 
   const EventCard({super.key, required this.event, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
-    final dateFormat = DateFormat('MMM dd, yyyy');
-    final timeFormat = DateFormat('h:mm a');
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -62,7 +63,7 @@ class EventCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${event.location}, ${dateFormat.format(event.startTime)}\n${timeFormat.format(event.startTime)}',
+                    '${event.location}, ${DateFormat.yMMMMd(settings.language).format(event.startTime)}, ${DateFormat.jm(settings.language).format(event.startTime)} - ${DateFormat.jm(settings.language).format(event.endTime)}',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],

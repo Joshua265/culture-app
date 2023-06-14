@@ -89,8 +89,8 @@ class Price {
 
   factory Price.fromJson(Map<String, dynamic> json) {
     return Price(
-      category: json['category'],
-      value: double.parse(json['value'].toString()),
+      category: json['category'] as String? ?? '',
+      value: json['value'] as double? ?? 0.0,
     );
   }
 

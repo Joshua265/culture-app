@@ -11,7 +11,8 @@ import '../models/event.dart';
 import '../services/event_service.dart';
 
 final eventsProvider = FutureProvider<List<Event>>((ref) async {
-  final settings = ref.read(settingsProvider);
+  print("eventsProvider");
+  final settings = ref.watch(settingsProvider);
   final events = await EventService.getRandomEvents(settings.city);
   return events;
 });
@@ -21,8 +22,9 @@ class StartScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(eventsProvider);
     final settings = ref.watch(settingsProvider);
+    final events = ref.watch(eventsProvider);
+    print("StartScreen");
     return Scaffold(
       appBar: AppBar(
         title: const Text('CultureAPP'),
@@ -40,6 +42,9 @@ class StartScreen extends ConsumerWidget {
           data: (events) => _buildEventList(events, context),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stackTrace) {
+            print(events);
+            print(error);
+            print(stackTrace);
             return Center(
                 child: EmptyListWidget(
               caption: AppLocalizations.of(context)!.errorLoadingEvents,

@@ -12,97 +12,102 @@ class UserScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.user),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              AppLocalizations.of(context)!.personalSettings,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-          ),
-          Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.confirmation_num),
-                  title: Text(AppLocalizations.of(context)!.myTickets),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => TicketsScreen(),
-                      ),
-                    );
-                  },
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.user),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  AppLocalizations.of(context)!.personalSettings,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.location_on),
-                  title: Text(AppLocalizations.of(context)!.city),
-                  subtitle: Text(settings.city),
-                  onTap: () {
-                    // TODO: navigate to location settings screen
-                  },
+              ),
+              Card(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.confirmation_num),
+                      title: Text(AppLocalizations.of(context)!.myTickets),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => TicketsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.location_on),
+                      title: Text(AppLocalizations.of(context)!.city),
+                      subtitle: Text(settings.city),
+                      onTap: () {
+                        // TODO: navigate to location settings screen
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              AppLocalizations.of(context)!.displaySettings,
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-          ),
-          Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Column(
-              children: [
-                SwitchListTile(
-                  title: Text(AppLocalizations.of(context)!.darkMode),
-                  value: settings.darkMode,
-                  onChanged: (bool value) {
-                    ref.read(settingsProvider.notifier).toggleDarkMode();
-                  },
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  AppLocalizations.of(context)!.displaySettings,
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
-                LanguageSelector(),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              AppLocalizations.of(context)!.accountSettings,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.lock),
-                  title: Text(AppLocalizations.of(context)!.changePassword),
-                  onTap: () {
-                    // TODO: navigate to password change screen
-                  },
+              ),
+              Card(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  children: [
+                    SwitchListTile(
+                      title: Text(AppLocalizations.of(context)!.darkMode),
+                      value: settings.darkMode,
+                      onChanged: (bool value) {
+                        ref.read(settingsProvider.notifier).toggleDarkMode();
+                      },
+                    ),
+                    LanguageSelector(),
+                  ],
                 ),
-                ListTile(
-                  leading: const Icon(Icons.credit_card),
-                  title: Text(AppLocalizations.of(context)!.editPaymentMethods),
-                  onTap: () {
-                    // TODO: navigate to payment methods screen
-                  },
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  AppLocalizations.of(context)!.accountSettings,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-              ],
-            ),
+              ),
+              Card(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.lock),
+                      title: Text(AppLocalizations.of(context)!.changePassword),
+                      onTap: () {
+                        // TODO: navigate to password change screen
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.credit_card),
+                      title: Text(
+                          AppLocalizations.of(context)!.editPaymentMethods),
+                      onTap: () {
+                        // TODO: navigate to payment methods screen
+                      },
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

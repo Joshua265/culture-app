@@ -5,7 +5,7 @@ class Settings {
 
   Settings({
     this.darkMode = false,
-    this.language = 'en',
+    this.language = 'de',
     this.city = 'Heilbronn',
   });
 }
